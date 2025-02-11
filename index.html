@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Dashboard</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script defer src="index.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -30,41 +31,26 @@
             box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
         }
         #d3-graph {
-            height: 300px;
+            width: 800px;
+            height: 400px;
+            margin: auto;
         }
     </style>
 </head>
 <body>
 
-    <h1>Project Dashboard- "Rhythms of Heat: Interactive Analysis of Male and Female Mouse Body Temperature Across Ovulation Cycles</h1>
+    <h1>Rhythms of Heat: Interactive Analysis of Male and Female Mouse Body Temperature Across Ovulation Cycles</h1>
 
     <img src="images/kevinmyo.png" alt="Mice Activity" width="700" height="400">
-    
     <img src="images/day1.png" alt="Mice Activity" width="700" height="400">
     <img src="images/day2.png" alt="Mice Activity" width="700" height="400">
     <img src="images/day5.png" alt="Mice Activity" width="700" height="400">
     <img src="images/day6.png" alt="Mice Activity" width="700" height="400">
 
-
-    <script>
-        // Simple D3 example (bar chart)
-        const svg = d3.select("#d3-graph")
-            .append("svg")
-            .attr("width", 300)
-            .attr("height", 300);
-
-        const data = [10, 20, 30, 40, 50];
-
-        svg.selectAll("rect")
-            .data(data)
-            .enter()
-            .append("rect")
-            .attr("x", (d, i) => i * 60)
-            .attr("y", d => 300 - d * 5)
-            .attr("width", 50)
-            .attr("height", d => d * 5)
-            .attr("fill", "steelblue");
-    </script>
+    <div class="graph">
+        <h2>Mouse Temperature Trends Over a 24-Hour Window</h2>
+        <div id="d3-graph"></div>
+    </div>
 
 </body>
 </html>
