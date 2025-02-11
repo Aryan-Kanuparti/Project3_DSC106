@@ -39,21 +39,38 @@ async function loadData() {
     const ovulationDays = [2, 6, 10, 14];
     const nonOvulationDays = [1, 3, 4, 5, 7, 8, 9, 11, 12, 13];
 
+    // function aggregateTemperature(data, selectedDays) {
+    //     let avgTemp = new Array(numMinutes).fill(0);
+    //     let count = new Array(numMinutes).fill(0);
+
+    //     selectedDays.forEach(day => {
+    //         let startIdx = (day - 1) * numMinutes;
+    //         for (let i = 0; i < numMinutes; i++) {
+    //             if (data[i + startIdx] && data[i + startIdx].temp !== undefined) {
+    //                 avgTemp[i] += data[i + startIdx].temp;
+    //                 count[i] += 1;
+    //             }
+    //         }
+    //     });
+    //     return avgTemp.map((sum, i) => (count[i] > 0 ? sum / count[i] : NaN));
+    // }
     function aggregateTemperature(data, selectedDays) {
         let avgTemp = new Array(numMinutes).fill(0);
         let count = new Array(numMinutes).fill(0);
-
+    
         selectedDays.forEach(day => {
             let startIdx = (day - 1) * numMinutes;
             for (let i = 0; i < numMinutes; i++) {
-                if (data[i + startIdx] && data[i + startIdx].temp !== undefined) {
-                    avgTemp[i] += data[i + startIdx].temp;
+                if (!isNaN(data[i + startIdx])) { // Ensure valid number
+                    avgTemp[i] += data[i + startIdx];
                     count[i] += 1;
                 }
             }
         });
-        return avgTemp.map((sum, i) => (count[i] > 0 ? sum / count[i] : NaN));
+    
+        return avgTemp.map((sum, i) => (count[i] > 0 ? sum / count[i] : NaN)); // Avoid division by 0
     }
+    
 
     // Get averages for each condition
     const maleAvg = aggregateTemperature(maleData, Array.from({ length: 14 }, (_, i) => i + 1));
@@ -65,7 +82,10 @@ async function loadData() {
     console.log("Female Non-Ovulation Avg:", femaleNonOvulationAvg);
 
     // Convert to line chart format
-    const createLineData = (temps) => temps.map((temp, i) => ({ minute: i, temp }));
+    // const createLineData = (temps) => temps.map((temp, i) => ({ minute: i, temp }));
+    const createLineData = (temps) => temps
+    .map((temp, i) => ({ minute: i, temp }))
+    .filter(d => !isNaN(d.temp)); // Remove NaN values
 
     // Line generator
     const line = d3.line()
