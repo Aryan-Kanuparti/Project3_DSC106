@@ -25,12 +25,18 @@ svg.append("g").call(yAxis);
 
 // Function to load and process data
 async function loadData() {
-    const femData = await d3.csv("data/Mouse_Data_Student_Copy.xlsx - Fem Temp.csv", d3.autoType);
-    const maleData = await d3.csv("data/Mouse_Data_Student_Copy.xlsx - Male Temp.csv", d3.autoType);
+    const femData = await d3.csv("data/Fem_Temp.csv", d3.autoType);
+    const maleData = await d3.csv("data/Male_Temp.csv", d3.autoType);
 
-    // Convert columns to numeric values
+    console.log("Raw Female Data:", femData);
+    console.log("Raw Male Data:", maleData);
+
+    // Ensure numeric conversion
+    femData.forEach(d => d.temp = +d.temp);
+    maleData.forEach(d => d.temp = +d.temp);
+
     const numMinutes = 1440;
-    const ovulationDays = [2, 6, 10, 14]; // Days with ovulation
+    const ovulationDays = [2, 6, 10, 14];
     const nonOvulationDays = [1, 3, 4, 5, 7, 8, 9, 11, 12, 13];
 
     function aggregateTemperature(data, selectedDays) {
@@ -40,18 +46,23 @@ async function loadData() {
         selectedDays.forEach(day => {
             let startIdx = (day - 1) * numMinutes;
             for (let i = 0; i < numMinutes; i++) {
-                avgTemp[i] += data[i + startIdx];
-                count[i] += 1;
+                if (data[i + startIdx] && data[i + startIdx].temp !== undefined) {
+                    avgTemp[i] += data[i + startIdx].temp;
+                    count[i] += 1;
+                }
             }
         });
-
-        return avgTemp.map((sum, i) => sum / count[i]);
+        return avgTemp.map((sum, i) => (count[i] > 0 ? sum / count[i] : NaN));
     }
 
     // Get averages for each condition
-    const maleAvg = aggregateTemperature(Object.values(maleData), Array.from({ length: 14 }, (_, i) => i + 1));
-    const femaleOvulationAvg = aggregateTemperature(Object.values(femData), ovulationDays);
-    const femaleNonOvulationAvg = aggregateTemperature(Object.values(femData), nonOvulationDays);
+    const maleAvg = aggregateTemperature(maleData, Array.from({ length: 14 }, (_, i) => i + 1));
+    const femaleOvulationAvg = aggregateTemperature(femData, ovulationDays);
+    const femaleNonOvulationAvg = aggregateTemperature(femData, nonOvulationDays);
+
+    console.log("Male Avg:", maleAvg);
+    console.log("Female Ovulation Avg:", femaleOvulationAvg);
+    console.log("Female Non-Ovulation Avg:", femaleNonOvulationAvg);
 
     // Convert to line chart format
     const createLineData = (temps) => temps.map((temp, i) => ({ minute: i, temp }));
@@ -84,6 +95,8 @@ async function loadData() {
         .attr("stroke-width", 2)
         .attr("d", line);
 
+    console.log("Paths added to SVG");
+
     // Add legend
     const legend = svg.append("g").attr("transform", `translate(${width - 150}, 20)`);
 
@@ -109,6 +122,8 @@ async function loadData() {
         .attr("y", (_, i) => i * 20 + 12)
         .text(d => d.label)
         .attr("font-size", "14px");
+
+    console.log("Legend added");
 }
 
 // Load and visualize data
