@@ -220,30 +220,48 @@ async function loadData() {
         updateGraph(numMinutes);
 
         // Add legend
-        const legend = svg.append("g").attr("transform", `translate(${width - 150}, 20)`);
+        const legend = svg.append("g").attr("transform", `translate(${width - 200}, 20)`);
 
         const legendData = [
-            { color: "blue", label: "Male Avg Temp" },
-            { color: "purple", label: "Female Ovulation Temp" },
-            { color: "red", label: "Female Non-Ovulation Temp" }
+            { color: "blue", label: "Male Avg Temp", id: "maleLine" },
+            { color: "purple", label: "Female Ovulation Temp",id: "femaleOvLine" },
+            { color: "red", label: "Female Non-Ovulation Temp", id:"femaleNonOvLine" }
         ];
+        //toggle legend
+        const legendItems = legend.selectAll(".legendItem")
+        .data(legendData)
+        .enter()
+        .append("g")
+        .attr("class", "legendItem")
+        .attr("transform", (d, i) => `translate(0, ${i * 25})`) // Spaced out better
+        .style("cursor", "pointer")
+        .on("click", function(event, d) {
+            const line = d3.select(`#${d.id}`);
+            const isHidden = line.style("display") === "none";
+            line.style("display", isHidden ? "inline" : "none"); // Toggle visibility
+        });
+    
+    // Color box
+    legendItems.append("rect")
+        .attr("x", 0)
+        .attr("width", 15)
+        .attr("height", 15)
+        .attr("fill", d => d.color);
+    
+    // Legend text
+    legendItems.append("text")
+        .attr("x", 25)
+        .attr("y", 12)
+        .text(d => d.label)
+        .attr("font-size", "14px");
 
-        legend.selectAll("rect")
-            .data(legendData)
-            .enter().append("rect")
-            .attr("x", 0)
-            .attr("y", (_, i) => i * 20)
-            .attr("width", 15)
-            .attr("height", 15)
-            .attr("fill", d => d.color);
-
-        legend.selectAll("text")
-            .data(legendData)
-            .enter().append("text")
-            .attr("x", 20)
-            .attr("y", (_, i) => i * 20 + 12)
-            .text(d => d.label)
-            .attr("font-size", "14px");
+    legend.append("text")
+        .attr("x", 0)
+        .attr("y", -10) // Position above the legend
+        .text("Click Legend to Toggle Data")
+        .attr("font-size", "14px")
+        .attr("font-weight", "bold")
+        .attr("fill", "black");
 
         console.log("Legend added");
     } catch (error) {
