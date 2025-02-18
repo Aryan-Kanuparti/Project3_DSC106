@@ -13,9 +13,20 @@ const svg = d3.select("#d3-graph")
     .append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+// Add slider to the page
+d3.select("#d3-graph").append("input")
+    .attr("type", "range")
+    .attr("id", "timeSlider")
+    .attr("min", 0)
+    .attr("max", 1440)
+    .attr("value", 1440)
+    .attr("step", 10)
+    .style("width", "100%");
+
+
 // X and Y scales
 const xScale = d3.scaleLinear().domain([0, 1440]).range([0, width]);  // 1440 minutes = 24 hours
-const yScale = d3.scaleLinear().domain([35, 40]).range([height, 0]);  // Temperature range
+const yScale = d3.scaleLinear().domain([35, 39]).range([height, 0]);  // Temperature range
 
 // X and Y axes
 const xAxis = d3.axisBottom(xScale).tickFormat(d => `${Math.floor(d / 60)}h`); // Convert to hours
@@ -151,8 +162,32 @@ async function loadData() {
             .y(d => yScale(d.temp))
             .curve(d3.curveMonotoneX);
 
+
+
+        function updateGraph(maxMinute) {
+                // Filter data based on slider position
+                function filterData(temps) {
+                    return temps
+                        .map((temp, i) => ({ minute: i, temp }))
+                        .filter(d => d.minute <= maxMinute && !isNaN(d.temp));
+                }
+            
+                // Update paths dynamically
+                d3.select("#maleLine").datum(filterData(maleAvg))
+                    .attr("d", line);
+                
+                d3.select("#femaleNonOvLine").datum(filterData(femaleNonOvulationAvg))
+                    .attr("d", line);
+            
+                d3.select("#femaleOvLine").datum(filterData(femaleOvulationAvg))
+                    .attr("d", line);
+            }
+
+
+
         // Add lines
         svg.append("path")
+            .attr("id", "maleLine")
             .datum(createLineData(maleAvg))
             .attr("fill", "none")
             .attr("stroke", "blue")
@@ -160,6 +195,7 @@ async function loadData() {
             .attr("d", line);
 
         svg.append("path")
+            .attr("id", "femaleNonOvLine")
             .datum(createLineData(femaleNonOvulationAvg))
             .attr("fill", "none")
             .attr("stroke", "red")
@@ -167,6 +203,7 @@ async function loadData() {
             .attr("d", line);
 
         svg.append("path") // Move ovulation line here (LAST)
+            .attr("id", "femaleOvLine")
             .datum(createLineData(femaleOvulationAvg))
             .attr("fill", "none")
             .attr("stroke", "purple")
@@ -176,6 +213,11 @@ async function loadData() {
 
 
         console.log("Paths added to SVG");
+
+        d3.select("#timeSlider").on("input", function() {
+            updateGraph(+this.value);
+        });
+        updateGraph(numMinutes);
 
         // Add legend
         const legend = svg.append("g").attr("transform", `translate(${width - 150}, 20)`);
