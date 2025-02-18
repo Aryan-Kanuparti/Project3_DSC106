@@ -36,6 +36,24 @@ const yAxis = d3.axisLeft(yScale);
 svg.append("g").attr("transform", `translate(0, ${height})`).call(xAxis);
 svg.append("g").call(yAxis);
 
+// Add axis labels
+svg.append("text") // X-axis label
+    .attr("x", width / 2)
+    .attr("y", height + margin.bottom - 10)
+    .attr("text-anchor", "middle")
+    .attr("font-size", "14px")
+    .attr("font-weight", "bold")
+    .text("Time of Day (Hours)");
+
+svg.append("text") // Y-axis label
+    .attr("transform", "rotate(-90)")
+    .attr("x", -height / 2)
+    .attr("y", -margin.left + 15)
+    .attr("text-anchor", "middle")
+    .attr("font-size", "14px")
+    .attr("font-weight", "bold")
+    .text("Body Temperature (°C)");
+
 // Function to load and process data
 async function loadData() {
     try {
