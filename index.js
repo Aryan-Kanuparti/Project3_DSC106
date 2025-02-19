@@ -266,6 +266,7 @@ async function loadData() {
         .attr("x", 0)
         .attr("y", -10) // Position above the legend
         .text("Click Legend to Toggle Data")
+        .attr("class", "legendary")
         .attr("font-size", "14px")
         .attr("font-weight", "bold")
         .attr("fill", "black");
@@ -293,8 +294,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             d3.select("#femaleLine").remove();
             await loadData()
         } else if (graphSelector.value === "graph2") {
+            d3.selectAll(".legendItem").remove();
+            d3.select("g").select(".legendary").remove();
 
-            
 
             const femData = await d3.csv("data/Fem_Temp.csv", d3.autoType);
             const maleData = await d3.csv("data/Male_Temp.csv", d3.autoType);
