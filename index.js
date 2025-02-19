@@ -339,7 +339,9 @@ document.addEventListener("DOMContentLoaded", async function () {
                 maleFilter = maleAverages.slice(numMinutes * (number -1), numMinutes * number);
                 femaleFilter = femAverages.slice(numMinutes * (number -1), numMinutes * number);
                 d3.select("#maleLine").remove();
-                d3.select('#femaleLine').remove();
+                d3.select("#femaleNonOvLine").remove();
+                d3.select("#femaleOvLine").remove();
+                d3.select("#femaleLine").remove();
                 const line = d3.line()
                 .x(d => xScale(d.minute))
                 .y(d => yScale(d.temp))
