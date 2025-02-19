@@ -60,7 +60,7 @@ async function loadData() {
     .attr("value", 1440)
     .attr("step", 10)
     .style("width", "100%");
-    
+
         const femData = await d3.csv("data/Fem_Temp.csv", d3.autoType);
         const maleData = await d3.csv("data/Male_Temp.csv", d3.autoType);
 
@@ -311,7 +311,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             const legendData = [
                 { color: "blue", label: "Male Avg Temp", id: "maleLine" },
-                { color: "red", label: "Female Non-Ovulation Temp", id:"femaleLine" }
+                { color: "red", label: "Female Avg Temp", id:"femaleLine" }
             ];
 
             const legendItems = legend.selectAll(".legendItem")
