@@ -287,6 +287,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (graphSelector.value === "graph1") {
             daySelector.style.display = "none";
             daySelector.style.display = "none";
+            d3.select("#maleLine").remove();
+            d3.select("#femaleNonOvLine").remove();
+            d3.select("#femaleOvLine").remove();
+            d3.select("#femaleLine").remove();
             await loadData()
         } else if (graphSelector.value === "graph2") {
 
