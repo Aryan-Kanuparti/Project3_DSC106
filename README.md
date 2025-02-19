@@ -1,5 +1,4 @@
-# Project3_DSC106
-Rhythms of Heat: Interactive Analysis of Male and Female Mouse Body Temperature Across Ovulation Cycles
+# Rhythms of Heat: Interactive Analysis of Male and Female Mouse Body Temperature Across Ovulation Cycles
 
 Research Question and Audience--
 Our visualization is designed for researchers, students, and data enthusiasts interested in biological rhythms and sex-based physiological differences. It allows users to explore how ovulation affects body temperature in female mice and how these patterns compare to male temperature fluctuations. By structuring the data into a clear 24-hour cycle while also providing the option to view individual days, our visualization helps users identify key trends and investigate specific days in greater detail.
