@@ -295,8 +295,15 @@ document.addEventListener("DOMContentLoaded", async function () {
             d3.select("#femaleLine").remove();
             await loadData()
         } else if (graphSelector.value === "graph2") {
+            // delete all necessary thing in graph1
             d3.selectAll(".legendItem").remove();
             d3.select("g").select(".legendary").remove();
+            d3.select("#timeSlider").remove();
+
+
+
+
+
 
             const legend = svg.append("g").attr("transform", `translate(${width - 200}, 20)`);
 
