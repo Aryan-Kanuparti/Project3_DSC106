@@ -286,6 +286,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     graphSelector.addEventListener("change", async function () {
 
         if (graphSelector.value === "graph1") {
+            d3.selectAll(".legendItem").remove();
             daySelector.style.display = "none";
             daySelector.style.display = "none";
             d3.select("#maleLine").remove();
@@ -296,6 +297,36 @@ document.addEventListener("DOMContentLoaded", async function () {
         } else if (graphSelector.value === "graph2") {
             d3.selectAll(".legendItem").remove();
             d3.select("g").select(".legendary").remove();
+
+            const legend = svg.append("g").attr("transform", `translate(${width - 200}, 20)`);
+
+            const legendData = [
+                { color: "blue", label: "Male Avg Temp", id: "maleLine" },
+                { color: "red", label: "Female Non-Ovulation Temp", id:"femaleLine" }
+            ];
+
+            const legendItems = legend.selectAll(".legendItem")
+            .data(legendData)
+            .enter()
+            .append("g")
+            .attr("class", "legendItem")
+            .attr("transform", (d, i) => `translate(0, ${i * 25})`); // Spaced out better
+
+            legendItems.append("rect")
+            .attr("x", 0)
+            .attr("width", 15)
+            .attr("height", 15)
+            .attr("fill", d => d.color);
+        
+        // Legend text
+            legendItems.append("text")
+            .attr("x", 25)
+            .attr("y", 12)
+            .text(d => d.label)
+            .attr("font-size", "14px");
+
+            
+
 
 
             const femData = await d3.csv("data/Fem_Temp.csv", d3.autoType);
