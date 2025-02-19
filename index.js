@@ -13,15 +13,7 @@ const svg = d3.select("#d3-graph")
     .append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-// Add slider to the page
-d3.select("#d3-graph").append("input")
-    .attr("type", "range")
-    .attr("id", "timeSlider")
-    .attr("min", 0)
-    .attr("max", 1440)
-    .attr("value", 1440)
-    .attr("step", 10)
-    .style("width", "100%");
+
 
 
 // X and Y scales
@@ -59,6 +51,16 @@ svg.append("text") // Y-axis label
 // Function to load and process data
 async function loadData() {
     try {
+
+        d3.select("#d3-graph").append("input")
+    .attr("type", "range")
+    .attr("id", "timeSlider")
+    .attr("min", 0)
+    .attr("max", 1440)
+    .attr("value", 1440)
+    .attr("step", 10)
+    .style("width", "100%");
+    
         const femData = await d3.csv("data/Fem_Temp.csv", d3.autoType);
         const maleData = await d3.csv("data/Male_Temp.csv", d3.autoType);
 
