@@ -83,35 +83,6 @@ async function loadData() {
         const ovulationDays = [2, 6, 10, 14];
         const nonOvulationDays = [1, 3, 4, 5, 7, 8, 9, 11, 12, 13];
 
-        // function aggregateTemperature(data, selectedDays) {
-        //     let avgTemp = new Array(1440).fill(0);
-        //     let count = new Array(1440).fill(0);
-        
-        //     selectedDays.forEach(day => {
-        //         let startIdx = (day - 1) * 1440; // Start of the day
-        
-        //         for (let i = 0; i < 1440; i++) {
-        //             let tempSum = 0;
-        //             let tempCount = 0;
-        
-        //             // Sum across all temperature columns (e.g., f1, f2, ..., fN)
-        //             Object.keys(data[i]).forEach(key => {
-        //                 if (!isNaN(data[i][key])) {
-        //                     tempSum += data[i][key];
-        //                     tempCount += 1;
-        //                 }
-        //             });
-        
-        //             if (tempCount > 0) {
-        //                 avgTemp[i] += tempSum / tempCount;
-        //                 count[i] += 1;
-        //             }
-        //         }
-        //     });
-        
-        //     return avgTemp.map((sum, i) => (count[i] > 0 ? sum / count[i] : NaN));
-        // }
-
 
         function aggregateTemperature(data, selectedDays) {
             let avgTemp = new Array(1440).fill(0);
@@ -302,11 +273,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             d3.select("g").select(".legendary").remove();
             d3.select("#timeSlider").remove();
 
-
-
-
-
-
             const legend = svg.append("g").attr("transform", `translate(${width - 200}, 20)`);
 
             const legendData = [
@@ -446,14 +412,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             .attr("stroke-width", 2)
             .attr("d", line);
 
-
-            
-
-    
-    
-
         }
-
 
     });
 
