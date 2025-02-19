@@ -52,11 +52,40 @@
     <img src="images/day6.png" alt="Mice Activity" width="700" height="400">
     <h4>Day 1 and 5 are non-estrus days, 2 and 6 are.</h4>
 
+    
     <div class="graph">
         <h3>Final D3 Visualization</h3>
         <h2>Body Temperature Variations: Aggregated Male vs. Female Mice (Ovulation & Non-Ovulation)</h2>
+        
+        <label for="graph-selector">Select Graph:</label>
+        <select id="graph-selector">
+            <option value="graph1">Average</option>
+            <option value="graph2">Real Data</option>
+        </select>
+    
         <div id="d3-graph"></div>
-    </div>
 
+        <!-- Button initially hidden -->
+
+        <select id="extra-dropdown" style="display: none;">
+            <option value="option1">Day 1</option>
+            <option value="option2">Day 2(Ovulation)</option>
+            <option value="option3">Day 3</option>
+            <option value="option4">Day 4</option>
+            <option value="option5">Day 5</option>
+            <option value="option6">Day 6(Ovulation)</option>
+            <option value="option7">Day 7</option>
+            <option value="option8">Day 8</option>
+            <option value="option9">Day 9</option>
+            <option value="option10">Day 10(Ovulation)</option>
+            <option value="option11">Day 11</option>
+            <option value="option12">Day 12</option>
+            <option value="option13">Day 13</option>
+            <option value="option14">Day 14(Ovulation)</option>
+        </select>
+    
+    
+
+    
 </body>
 </html>

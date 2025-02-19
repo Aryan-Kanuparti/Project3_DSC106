@@ -54,14 +54,14 @@ svg.append("text") // Y-axis label
     .attr("font-weight", "bold")
     .text("Body Temperature (°C)");
 
+
+
 // Function to load and process data
 async function loadData() {
     try {
         const femData = await d3.csv("data/Fem_Temp.csv", d3.autoType);
         const maleData = await d3.csv("data/Male_Temp.csv", d3.autoType);
 
-        console.log("Loaded Female Data:", femData.slice(0, 5)); // First 5 rows for verification
-        console.log("Loaded Male Data:", maleData.slice(0, 5));
 
         // Ensure numeric conversion
         femData.forEach(d => {
@@ -150,15 +150,6 @@ async function loadData() {
         const femaleOvulationAvg = aggregateTemperature(femData, ovulationDays);
         const femaleNonOvulationAvg = aggregateTemperature(femData, nonOvulationDays);
 
-        console.log("Formatted Male Avg Data:", maleAvg.slice(0, 5));
-        console.log("Female Ovulation Data (First 20):", femaleOvulationAvg.slice(0, 20));
-        console.log("NaN Check:", femaleOvulationAvg.some(d => isNaN(d)), "Contains Undefined:", femaleOvulationAvg.some(d => d === undefined));
-        console.log("Formatted Female Non-Ovulation Data:", femaleNonOvulationAvg.slice(0, 5));
-        console.log("Female Non-Ovulation Data (First 20 points):", femaleNonOvulationAvg.slice(0, 20));
-        console.log("NaN Check:", femaleNonOvulationAvg.some(d => isNaN(d)), 
-                    "Contains Undefined:", femaleNonOvulationAvg.some(d => d === undefined));
-        
-
 
 
         // Convert to line chart format
@@ -167,9 +158,7 @@ async function loadData() {
                 .map((temp, i) => ({ minute: i, temp }))
                 .filter(d => d.temp !== undefined && d.temp !== null && !isNaN(d.temp)); 
         
-            console.log("Line Data (First 10 points):", result.slice(0, 10)); // Debugging log
-            console.log("Total Points Processed:", result.length);
-        
+
             return result;
         };
         
@@ -287,7 +276,140 @@ async function loadData() {
     }
 }
 
-// Load and visualize data
-(async function () {
+
+
+document.addEventListener("DOMContentLoaded", async function () {
+    const graphSelector = document.getElementById("graph-selector");
+    const daySelector = document.getElementById("extra-dropdown")
+
+    graphSelector.addEventListener("change", async function () {
+
+        if (graphSelector.value === "graph1") {
+            daySelector.style.display = "none";
+            daySelector.style.display = "none";
+            await loadData()
+        } else if (graphSelector.value === "graph2") {
+
+            
+
+            const femData = await d3.csv("data/Fem_Temp.csv", d3.autoType);
+            const maleData = await d3.csv("data/Male_Temp.csv", d3.autoType);
+            
+            const femAverages = [];
+            const maleAverages = [];
+    
+            femData.forEach(row => {
+                const values = Object.values(row); // Extract values
+                const sum = values.reduce((acc, val) => acc + val, 0); // Sum values
+                 const avg = sum / values.length; // Compute average
+                femAverages.push(avg);
+            });
+    
+            maleData.forEach(row => {
+                const values = Object.values(row); // Extract values
+                const sum = values.reduce((acc, val) => acc + val, 0); // Sum values
+                const avg = sum / values.length; // Compute average
+                maleAverages.push(avg);
+            })
+    
+    
+            const numMinutes = 1440;
+
+            daySelector.style.display = "block";
+            daySelector.style.display = "block";
+
+            d3.select("#maleLine").remove();
+            d3.select("#femaleNonOvLine").remove();
+            d3.select("#femaleOvLine").remove();
+            d3.select("#femaleLine").remove();
+
+            let maleFilter = maleAverages.slice(numMinutes * (1 -1), numMinutes * 1);
+            console.log(maleFilter)
+            let femaleFilter = femAverages.slice(numMinutes * (1 -1), numMinutes * 1);
+            console.log(femaleFilter)
+
+
+            daySelector.addEventListener("change", function(){
+                const number = parseInt(daySelector.value.slice(6), 10)
+                console.log(number)
+                maleFilter = maleAverages.slice(numMinutes * (number -1), numMinutes * number);
+                femaleFilter = femAverages.slice(numMinutes * (number -1), numMinutes * number);
+                d3.select("#maleLine").remove();
+                d3.select('#femaleLine').remove();
+                const line = d3.line()
+                .x(d => xScale(d.minute))
+                .y(d => yScale(d.temp))
+                .curve(d3.curveMonotoneX);
+    
+                const createLineData = (temps) => {
+                    const result = temps
+                        .map((temp, i) => ({ minute: i, temp }))
+                        .filter(d => d.temp !== undefined && d.temp !== null && !isNaN(d.temp)); 
+                
+        
+                    return result;
+                };
+    
+                svg.append("path")
+                .attr("id", "maleLine")
+                .datum(createLineData(maleFilter))
+                .attr("fill", "none")
+                .attr("stroke", "blue")
+                .attr("stroke-width", 2)
+                .attr("d", line);
+    
+                svg.append("path")
+                .attr("id", "femaleLine")
+                .datum(createLineData(femaleFilter))
+                .attr("fill", "none")
+                .attr("stroke", "red")
+                .attr("stroke-width", 2)
+                .attr("d", line);
+
+            })
+
+            const line = d3.line()
+            .x(d => xScale(d.minute))
+            .y(d => yScale(d.temp))
+            .curve(d3.curveMonotoneX);
+
+            const createLineData = (temps) => {
+                const result = temps
+                    .map((temp, i) => ({ minute: i, temp }))
+                    .filter(d => d.temp !== undefined && d.temp !== null && !isNaN(d.temp)); 
+            
+    
+                return result;
+            };
+
+            svg.append("path")
+            .attr("id", "maleLine")
+            .datum(createLineData(maleFilter))
+            .attr("fill", "none")
+            .attr("stroke", "blue")
+            .attr("stroke-width", 2)
+            .attr("d", line);
+
+            svg.append("path")
+            .attr("id", "femaleLine")
+            .datum(createLineData(femaleFilter))
+            .attr("fill", "none")
+            .attr("stroke", "red")
+            .attr("stroke-width", 2)
+            .attr("d", line);
+
+
+            
+
+    
+    
+
+        }
+
+
+    });
+
     await loadData();
-})();
+
+});
+
